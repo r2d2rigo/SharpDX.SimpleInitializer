@@ -37,6 +37,7 @@ namespace SharpDX.SimpleInitializer
         private SwapChainPanel panel;
         private ISwapChainBackgroundPanelNative nativeBackgroundPanel;
         private ISwapChainPanelNative nativePanel;
+        private readonly AlphaMode? _alphaMode;
 
         /// <summary>
         /// Creates a new SharpDXContext instance.
@@ -45,6 +46,17 @@ namespace SharpDX.SimpleInitializer
             : base()
         {
         }
+
+        /// <summary>
+        /// Creata a new  SharpDXContext instance with a specified <see cref="AlphaMode"/> for the swap chain buffer.
+        /// </summary>
+        /// <param name="alphaMode"></param>
+        public SharpDXContext(AlphaMode alphaMode):base()
+        {
+            _alphaMode = alphaMode;
+        }
+
+
 
         /// <summary>
         /// Binds the object to a SwapChainBackgroundPanel and initializes Direct3D11 resources.
@@ -169,6 +181,12 @@ namespace SharpDX.SimpleInitializer
                     Scaling = Scaling.Stretch,
                     SwapEffect = SwapEffect.FlipSequential,
                 };
+
+                // If we have an alpha mode specified then use that 
+                if (_alphaMode.HasValue)
+                {
+                    swapChainDescription.AlphaMode = _alphaMode.Value;
+                }
 
                 using (SharpDX.DXGI.Device2 dxgiDevice2 = this.D3DDevice.QueryInterface<SharpDX.DXGI.Device2>())
                 {
